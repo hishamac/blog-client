@@ -1,5 +1,6 @@
 import Axios from "@/utils/Axios";
 import { uploadImageToCloudinary } from "@/utils/cloudinary";
+import navigate from "@/utils/navigate";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
