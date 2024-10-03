@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -19,14 +19,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import { z } from "zod";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 interface Input {
   name: string;
   viewName: string;
   type: string;
-  options?: string[];
+  options?: { name: string; value: string }[];
 }
 
 interface UpdateProps {
@@ -37,6 +39,7 @@ interface UpdateProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
   itemToUpdate: any;
+  fileRefValue?: string;
 }
 
 export default function Update({
@@ -47,11 +50,14 @@ export default function Update({
   open,
   setOpen,
   itemToUpdate,
+  fileRefValue,
 }: UpdateProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: itemToUpdate,
   });
+
+  const fileRef = form.register(`${fileRefValue as string}`);
 
   useEffect(() => {
     if (itemToUpdate) {
@@ -60,7 +66,7 @@ export default function Update({
   }, [itemToUpdate, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const id = itemToUpdate._id; // Get the ID  
+    const id = itemToUpdate._id; // Get the ID
     updateItem(id, values); // Spread the array as arguments
   }
 
@@ -81,59 +87,122 @@ export default function Update({
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-4"
                   >
-                    {inputs?.map((input) => (
-                      <React.Fragment key={input.name}>
-                        {input?.type === "text" && (
-                          <FormField
-                            control={form.control}
-                            name={input?.name}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{input?.viewName}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder={`Enter ${title} ${input?.viewName}`}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        )}
-                        {input?.type === "select" && (
-                          <FormField
-                            control={form.control}
-                            name={input?.name}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{input?.viewName}</FormLabel>
-                                <FormControl>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        placeholder={`Select your ${input?.viewName}`}
-                                      />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {input?.options?.map((option, index) => (
-                                        <SelectItem key={index} value={option}>
-                                          {option.toUpperCase()}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        )}
-                      </React.Fragment>
-                    ))}
+                    <div className=" h-[40vh] overflow-auto">
+                      {inputs?.map((input) => (
+                        <>
+                          {input?.type === "text" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{input?.viewName}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder={`Enter ${title} ${input?.viewName}`}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : input?.type === "textarea" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{input?.viewName}</FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      placeholder={`Enter ${title} ${input?.viewName}`}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : input.type === "file" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{input?.viewName}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder={`Enter your ${input?.viewName}`}
+                                      type="file"
+                                      {...fileRef}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : input.type === "select" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`} // Make sure this corresponds to the field you're selecting
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{input?.viewName}</FormLabel>
+                                  <FormControl>
+                                    <Select
+                                      onValueChange={field.onChange} // Bind the value change to form control
+                                      defaultValue={field.value} // Set the default value from form state
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue
+                                          placeholder={`Select your ${input?.viewName}`}
+                                        />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {/* Assuming `input?.options` contains options */}
+                                        {input?.options?.map(
+                                          (option, index) => (
+                                            <SelectItem
+                                              key={index}
+                                              value={option?.value as string}
+                                            >
+                                              {option?.name as string}
+                                            </SelectItem>
+                                          )
+                                        )}
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : input?.type === "checkbox" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{input?.viewName}</FormLabel>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value} // Sync the switch's state with the form's field value
+                                      onCheckedChange={(checked) => {
+                                        field.onChange(checked); // Notify React Hook Form of the change
+                                      }}
+                                      id={input.name} // Ensure the id is the input name for accessibility
+                                      className="mt-1 block" // Styling
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : null}
+                        </>
+                      ))}
+                    </div>
                     <Button
                       className="w-full opacity-100 cursor-pointer"
                       type="submit"

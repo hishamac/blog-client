@@ -55,18 +55,20 @@ export default function Language() {
       name: "direction",
       viewName: "Direction",
       type: "select",
-      options: ["ltr", "rtl"],
+      options: [
+        {
+          name: "LTR",
+          value: "ltr",
+        },
+        {
+          name: "RTL",
+          value: "rtl",
+        },
+      ],
     },
   ];
 
-  const updateFormSchema = z.object({
-    name: z.string().min(5, {
-      message: "Name must be at least 5 characters.",
-    }),
-    direction: z.string().min(1, {
-      message: "Direction is required",
-    }),
-  });
+  const updateFormSchema = createFormSchema;
 
   const updateInputs = [
     {
@@ -79,7 +81,16 @@ export default function Language() {
       name: "direction",
       viewName: "Direction",
       type: "select",
-      options: ["ltr", "rtl"],
+      options: [
+        {
+          name: "LTR",
+          value: "ltr",
+        },
+        {
+          name: "RTL",
+          value: "rtl",
+        },
+      ],
       value: toUpdate?.direction,
     },
   ];

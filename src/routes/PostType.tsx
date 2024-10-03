@@ -50,11 +50,7 @@ export default function PostType() {
     },
   ];
 
-  const updateFormSchema = z.object({
-    name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
-    }),
-  });
+  const updateFormSchema = createFormSchema;
 
   const updateInputs = [
     {
@@ -85,7 +81,9 @@ export default function PostType() {
               >
                 Edit
               </Button>
-              <Button onClick={() => deletePostType(postType?._id)}>Delete</Button>
+              <Button onClick={() => deletePostType(postType?._id)}>
+                Delete
+              </Button>
             </CardFooter>
           </Card>
         ))}

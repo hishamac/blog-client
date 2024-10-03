@@ -9,6 +9,8 @@ import Register from "./routes/Register";
 import { Toaster } from "react-hot-toast";
 import Language from "./routes/Language";
 import PostType from "./routes/PostType";
+import Post from "./routes/Post";
+import PostDetail from "./routes/PostDetail";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,14 @@ const router = createBrowserRouter([
       {
         path: "post-type",
         element: <PostType />,
+      },
+      {
+        path: "post",
+        element: <Post />,
+      },
+      {
+        path: "post/:postId",
+        element: <PostDetail />,
       },
     ],
   },
