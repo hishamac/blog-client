@@ -86,16 +86,9 @@ export const usePostStore = create<PostStore>((set) => ({
   posts: [],
   setPosts: (posts) => set({ posts }),
   errorMessage: "",
-  createPost: async (postData: {
-    title: string;
-    description: string;
-    content: string;
-    type: string;
-    status: string;
-    imageUrl: FileList;
-    isActive: boolean;
-    author: string;
-  }) => {
+  createPost: async (postData) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Post...");
 
     const imageUrl = await uploadImageToCloudinary(postData.imageUrl[0]);
@@ -128,6 +121,7 @@ export const usePostStore = create<PostStore>((set) => ({
             posts: [...state.posts, response.data],
           }));
           set({ isCreateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Creating Post",
@@ -151,10 +145,13 @@ export const usePostStore = create<PostStore>((set) => ({
       });
   },
   getPosts: async () => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get("/api/posts")
       .then((response) => {
         if (response.status === 201) {
           set({ posts: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -171,10 +168,13 @@ export const usePostStore = create<PostStore>((set) => ({
       });
   },
   getPost: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get(`/api/posts/${_id}`)
       .then((response) => {
         if (response.status === 201) {
           set({ post: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -190,19 +190,9 @@ export const usePostStore = create<PostStore>((set) => ({
         });
       });
   },
-  updatePost: async (
-    _id: string,
-    postData: {
-      title: string;
-      description: string;
-      content: string;
-      type: string;
-      status: string;
-      imageUrl: FileList;
-      isActive: boolean;
-      author: string;
-    }
-  ) => {
+  updatePost: async (_id, postData) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Updating Post...");
     let imageUrl;
     if (postData.imageUrl.length > 0) {
@@ -237,6 +227,7 @@ export const usePostStore = create<PostStore>((set) => ({
             ),
           }));
           set({ isUpdateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Updating Post",
@@ -260,6 +251,8 @@ export const usePostStore = create<PostStore>((set) => ({
       });
   },
   deletePost: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Deleting Post...");
     await Axios.delete(`/api/posts/${_id}`, {
       headers: {
@@ -276,6 +269,7 @@ export const usePostStore = create<PostStore>((set) => ({
             posts: state.posts.filter((post) => post._id !== _id),
           }));
           set({ isDeleteOpen: false });
+          set((state) => ({ isNull: state.posts.length === 0 }));
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Deleting Post",

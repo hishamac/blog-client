@@ -83,6 +83,8 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
   setLanguages: (languages) => set({ languages }),
   errorMessage: "",
   createLanguage: async (name, direction) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Language...");
     await Axios.post(
       "/api/languages",
@@ -103,6 +105,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
             languages: state.languages.concat({ ...response.data }),
           }));
           set({ isCreateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Creating Language",
@@ -129,10 +132,13 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       });
   },
   getLanguages: async () => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get("/api/languages")
       .then((response) => {
         if (response.status === 201) {
           set({ languages: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -151,10 +157,13 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       });
   },
   getLanguage: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get(`/api/languages/${_id}`)
       .then((response) => {
         if (response.status === 201) {
           set({ language: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -173,6 +182,8 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       });
   },
   updateLanguage: async (_id, { name, direction }) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Updating Language...");
     await Axios.put(
       `/api/languages/${_id}`,
@@ -195,6 +206,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
             ),
           }));
           set({ isUpdateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Updating Language",
@@ -221,6 +233,8 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       });
   },
   deleteLanguage: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Deleting Language...");
     await Axios.delete(`/api/languages/${_id}`, {
       headers: {
@@ -239,6 +253,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
             ),
           }));
           set({ isDeleteOpen: false });
+          set((state) => ({ isNull: state.languages.length === 0 }));
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Deleting Language",

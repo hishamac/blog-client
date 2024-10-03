@@ -63,6 +63,8 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
   setPostTypes: (postTypes) => set({ postTypes }),
   errorMessage: "",
   createPostType: async (name) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Post Type...");
     await Axios.post(
       "/api/post-types",
@@ -83,6 +85,7 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
             postTypes: state.postTypes.concat({ ...response.data }),
           }));
           set({ isCreateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Creating Post Type",
@@ -109,10 +112,13 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
       });
   },
   getPostTypes: async () => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get("/api/post-types")
       .then((response) => {
         if (response.status === 201) {
           set({ postTypes: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -131,10 +137,13 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
       });
   },
   getPostType: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     Axios.get(`/api/post-types/${_id}`)
       .then((response) => {
         if (response.status === 201) {
           set({ postType: response.data });
+          set({ isNull: false });
         } else if (response.status === 200) {
           set({
             errorMessage:
@@ -153,6 +162,8 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
       });
   },
   updatePostType: async (_id, { name }) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Updating Post Type...");
     await Axios.put(
       `/api/post-types/${_id}`,
@@ -175,6 +186,7 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
             ),
           }));
           set({ isUpdateOpen: false });
+          set({ isNull: false });
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Updating Post Type",
@@ -201,6 +213,8 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
       });
   },
   deletePostType: async (_id) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
     const loadingToast = toast.loading("Deleting Post Type...");
     await Axios.delete(`/api/post-types/${_id}`, {
       headers: {
@@ -219,6 +233,7 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
             ),
           }));
           set({ isDeleteOpen: false });
+          set((state) => ({ isNull: state.postTypes.length === 0 }));
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Deleting Post Type",
