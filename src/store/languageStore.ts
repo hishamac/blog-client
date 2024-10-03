@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 
 interface LanguageStore {
+  isNull: boolean;
+  setIsNull: (isNull: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -63,6 +65,8 @@ interface LanguageStore {
 }
 
 export const useLanguageStore = create<LanguageStore>((set) => ({
+  isNull: false,
+  setIsNull: (isNull) => set({ isNull }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,

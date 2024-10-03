@@ -22,6 +22,8 @@ interface Post {
 }
 
 interface PostStore {
+  isNull: boolean;
+  setIsNull: (isNull: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -67,6 +69,8 @@ interface PostStore {
 }
 
 export const usePostStore = create<PostStore>((set) => ({
+  isNull: false,
+  setIsNull: (isNull) => set({ isNull }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,

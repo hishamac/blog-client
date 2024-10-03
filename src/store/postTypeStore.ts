@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 
 interface PostTypeStore {
+  isNull: boolean;
+  setIsNull: (isNull: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -43,6 +45,8 @@ interface PostTypeStore {
 }
 
 export const usePostTypeStore = create<PostTypeStore>((set) => ({
+  isNull: false,
+  setIsNull: (isNull) => set({ isNull }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,
