@@ -7,6 +7,8 @@ import { ModeToggle } from "./components/mode-toggle";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 import { Toaster } from "react-hot-toast";
+import Language from "./routes/Language";
+import PostType from "./routes/PostType";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,29 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+    ],
+  },
+  {
+    path: "/p",
+    element: <div>Dashboard</div>,
+  },
+  {
+    path: "/p",
+    element: (
+      <>
+        <Outlet />
+        <ModeToggle className="absolute bottom-5 left-3" />
+      </>
+    ),
+    children: [
+      {
+        path: "language",
+        element: <Language />,
+      },
+      {
+        path: "post-type",
+        element: <PostType />,
       },
     ],
   },
