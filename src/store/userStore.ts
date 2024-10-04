@@ -82,6 +82,8 @@ export const useUserStore = create<UserStore>((set) => ({
             duration: 3000,
           });
           localStorage.setItem("user", response.data?.token);
+          console.log(response.data);
+          console.log(localStorage.getItem("user"));
         } else if (response.status === 200) {
           toast.error(
             response.data?.message || "Error Happened While Logging In",

@@ -11,16 +11,14 @@ import Language from "./routes/Language";
 import PostType from "./routes/PostType";
 import Post from "./routes/Post";
 import PostDetail from "./routes/PostDetail";
+import AdminProtected from "./routes/protected/Admin";
+import BloggerProtected from "./routes/protected/Blogger";
+import Home from "./routes/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <div>
-        Home
-        <ModeToggle />
-      </div>
-    ),
+    element: <Home />,
   },
   {
     path: "/",
@@ -39,36 +37,42 @@ const router = createBrowserRouter([
         path: "register",
         element: <Register />,
       },
-    ],
-  },
-  {
-    path: "/p",
-    element: <div>Dashboard</div>,
-  },
-  {
-    path: "/p",
-    element: (
-      <>
-        <Outlet />
-        <ModeToggle className="absolute bottom-5 left-3" />
-      </>
-    ),
-    children: [
       {
-        path: "language",
-        element: <Language />,
-      },
-      {
-        path: "post-type",
-        element: <PostType />,
-      },
-      {
-        path: "post",
-        element: <Post />,
-      },
-      {
-        path: "post/:postId",
-        element: <PostDetail />,
+        element: <BloggerProtected />,
+        children: [
+          {
+            path: "/p",
+            element: (
+              <>
+                <Outlet />
+                <ModeToggle className="absolute bottom-5 left-3" />
+              </>
+            ),
+            children: [
+              {
+                index: true,
+                element: <div>HEllo</div>,
+              },
+              {
+                path: "post",
+                element: <Post />,
+              },
+              {
+                element: <AdminProtected />,
+                children: [
+                  {
+                    path: "language",
+                    element: <Language />,
+                  },
+                  {
+                    path: "post-type",
+                    element: <PostType />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     ],
   },

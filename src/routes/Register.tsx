@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/passwordInput";
 import { useUserStore } from "@/store/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -39,6 +41,27 @@ export default function Register() {
     const { name, email, password, profilePicture } = values;
     register(email, name, password, profilePicture);
   }
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("user");
+
+    if (!token) {
+      navigate("/login");
+    }
+
+    try {
+      const user: any = jwtDecode(token as string);
+      if (user.role === "admin" || user.role === "blogger") {
+        navigate("/p");
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 w-full h-screen">
