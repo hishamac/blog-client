@@ -92,7 +92,7 @@ export default function Register() {
                 <FormField
                   control={form.control}
                   name="profilePicture"
-                  render={({ field }) => (
+                  render={({}) => (
                     <FormItem>
                       <FormLabel>Profile Picture</FormLabel>
                       <FormControl>

@@ -68,7 +68,7 @@ export default function UserRegister() {
                 <FormField
                   control={form.control}
                   name="profilePicture"
-                  render={({ field }) => (
+                  render={({}) => (
                     <FormItem>
                       <FormLabel>Profile Picture</FormLabel>
                       <FormControl>

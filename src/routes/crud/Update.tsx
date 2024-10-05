@@ -131,7 +131,7 @@ export default function Update({
                             <FormField
                               control={form.control}
                               name={`${input?.name}`}
-                              render={({ field }) => (
+                              render={({  }) => (
                                 <FormItem>
                                   <FormLabel>{input?.viewName}</FormLabel>
                                   <FormControl>

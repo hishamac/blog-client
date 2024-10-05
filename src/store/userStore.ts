@@ -219,7 +219,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
     await Axios.put(
       `/api/users/${_id}`,
-      { name, email, password, profileFile },
+      { name, email, password, profilePicture },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("user")}`,
