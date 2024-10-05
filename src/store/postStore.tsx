@@ -6,7 +6,9 @@ import { jwtDecode } from "jwt-decode";
 
 interface Post {
   _id: string;
-  author: string;
+  author: {
+    [key: string]: any;
+  };
   likes: number;
   comments: [];
   title: string;
@@ -24,6 +26,8 @@ interface Post {
 interface PostStore {
   isNull: boolean;
   setIsNull: (isNull: boolean) => void;
+  isViewOpen: boolean;
+  setIsViewOpen: (isViewOpen: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -31,7 +35,7 @@ interface PostStore {
   isDeleteOpen: boolean;
   setIsDeleteOpen: (isDeleteOpen: boolean) => void;
   post: Post | null;
-  setPost: (post: Post) => void;
+  setPost: (post: Post | null) => void;
   posts: Post[];
   setPosts: (posts: Post[]) => void;
   errorMessage: string;
@@ -62,6 +66,8 @@ interface PostStore {
     }
   ) => void;
   deletePost: (_id: string) => void;
+  toView: Post | null;
+  setToView: (toVIew: Post) => void;
   toUpdate: Post | null;
   setToUpdate: (toUpdate: Post) => void;
   toDelete: Post | null;
@@ -71,6 +77,8 @@ interface PostStore {
 export const usePostStore = create<PostStore>((set) => ({
   isNull: false,
   setIsNull: (isNull) => set({ isNull }),
+  isViewOpen: false,
+  setIsViewOpen: (isViewOpen) => set({ isViewOpen }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,
@@ -79,6 +87,8 @@ export const usePostStore = create<PostStore>((set) => ({
   setIsDeleteOpen: (isDeleteOpen) => set({ isDeleteOpen }),
   post: null,
   setPost: (post) => set({ post }),
+  toView: null,
+  setToView: (toView) => set({ toView }),
   toUpdate: null,
   setToUpdate: (toUpdate) => set({ toUpdate }),
   toDelete: null,

@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,6 +22,8 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { z } from "zod";
 
 interface Input {
@@ -37,7 +40,7 @@ interface CreateProps {
   fileRefValue?: string;
   title: string;
   open: boolean;
-  setOpen: (isOpen: boolean) => void;
+  setOpen: (open: boolean) => void;
 }
 
 export default function Create({
@@ -78,7 +81,7 @@ export default function Create({
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="space-y-4"
                     >
-                      <div className=" h-[40vh] overflow-auto">
+                      <div className=" max-h-[40vh] overflow-auto">
                         {inputs?.map((input) => (
                           <>
                             {input?.type === "text" ? (
@@ -190,6 +193,18 @@ export default function Create({
                                   </FormItem>
                                 )}
                               />
+                            ) : input?.type === "rte" ? (
+                              <>
+                                <Label>{input?.viewName}</Label>
+                                <ReactQuill
+                                  className="mt-2 h-48 mb-12"
+                                  theme="snow"
+                                  value={form.watch(input.name)}
+                                  onChange={(value) =>
+                                    form.setValue(input.name, value)
+                                  }
+                                />
+                              </>
                             ) : null}
                           </>
                         ))}

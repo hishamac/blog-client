@@ -5,6 +5,8 @@ import { create } from "zustand";
 interface LanguageStore {
   isNull: boolean;
   setIsNull: (isNull: boolean) => void;
+  isViewOpen: boolean;
+  setIsViewOpen: (isViewOpen: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -12,29 +14,19 @@ interface LanguageStore {
   isDeleteOpen: boolean;
   setIsDeleteOpen: (isDeleteOpen: boolean) => void;
   language: {
-    _id: string;
-    name: string;
-    direction: string;
+    [x: string]: any;
   } | null;
-  setLanguage: (language: {
-    _id: string;
-    name: string;
-    direction: string;
-  }) => void;
+  setLanguage: (language: { [x: string]: any }) => void;
   languages: {
-    _id: string;
-    name: string;
-    direction: string;
+    [x: string]: any;
   }[];
   setLanguages: (
     languages: {
-      _id: string;
-      name: string;
-      direction: string;
+      [x: string]: any;
     }[]
   ) => void;
   errorMessage: string;
-  createLanguage: (name: string, direction: string) => void;
+  createLanguage: (values: { [x: string]: any }) => void;
   getLanguages: () => void;
   getLanguage: (_id: string) => void;
   updateLanguage: (
@@ -42,31 +34,25 @@ interface LanguageStore {
     { name, direction }: { name: string; direction: string }
   ) => void;
   deleteLanguage: (_id: string) => void;
+  toView: {
+    [x: string]: any;
+  } | null;
+  setToView: (toView: { [x: string]: any }) => void;
   toUpdate: {
-    _id: string;
-    name: string;
-    direction: string;
+    [x: string]: any;
   } | null;
-  setToUpdate: (toUpdate: {
-    _id: string;
-    name: string;
-    direction: string;
-  }) => void;
+  setToUpdate: (toUpdate: { [x: string]: any }) => void;
   toDelete: {
-    _id: string;
-    name: string;
-    direction: string;
+    [x: string]: any;
   } | null;
-  setToDelete: (toDelete: {
-    _id: string;
-    name: string;
-    direction: string;
-  }) => void;
+  setToDelete: (toDelete: { [x: string]: any }) => void;
 }
 
 export const useLanguageStore = create<LanguageStore>((set) => ({
   isNull: false,
   setIsNull: (isNull) => set({ isNull }),
+  isViewOpen: false,
+  setIsViewOpen: (isViewOpen) => set({ isViewOpen }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,
@@ -74,7 +60,9 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
   isDeleteOpen: false,
   setIsDeleteOpen: (isDeleteOpen) => set({ isDeleteOpen }),
   language: null,
-  setLanguage: (language) => set({ language }),
+  setLanguage: (language: any | null) => set({ language }),
+  toView: null,
+  setToView: (toView) => set({ toView }),
   toUpdate: null,
   setToUpdate: (toUpdate) => set({ toUpdate }),
   toDelete: null,
@@ -82,7 +70,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
   languages: [],
   setLanguages: (languages) => set({ languages }),
   errorMessage: "",
-  createLanguage: async (name, direction) => {
+  createLanguage: async ({ name, direction }) => {
     set({ isNull: false });
     set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Language...");

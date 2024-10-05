@@ -1,373 +1,566 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, Search, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+  ArrowRightIcon,
+  EyeIcon,
+  FilePenIcon,
+  MenuIcon,
+  MountainIcon,
+  SearchIcon,
+  UsersIcon,
+  XIcon,
+} from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header/Navigation Bar */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center">
-          <div className="mr-4 hidden md:flex">
-            <Link className="mr-6 flex items-center space-x-2" to="/">
-              <span className="hidden font-bold sm:inline-block">BlogApp</span>
+    <div className="flex flex-col min-h-screen w-full">
+      <header className="bg-background border-b sticky top-0 z-20 w-full">
+        <div className="container mx-auto px-4 flex justify-between items-center h-16">
+          <Link to="#" className="flex items-center gap-2">
+            <MountainIcon className="h-6 w-6" />
+            <span className="font-bold text-lg">Blog App</span>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              to="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Home
             </Link>
-            <nav className="flex items-center space-x-6 text-sm font-medium">
-              <Link to="/">Home</Link>
-              <Link to="/categories">Categories</Link>
-              <Link to="/about">About</Link>
-              <Link to="/contact">Contact</Link>
-            </nav>
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle Menu</span>
-          </Button>
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <div className="w-full flex-1 md:w-auto md:flex-none">
-              <form>
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search posts..."
-                    className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                  />
-                </div>
-              </form>
+            <Link
+              to="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Categories
+            </Link>
+            <Link
+              to="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              About
+            </Link>
+            <Link
+              to="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Contact
+            </Link>
+            <Link
+              to="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Sign In
+            </Link>
+            <div className="flex items-center gap-4 absolute">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="md:hidden">
+                    <MenuIcon className="h-5 w-5" />
+                    <span className="sr-only">Toggle menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                  <nav className="flex flex-col gap-4">
+                    <Link to="#" className="text-foreground hover:text-primary">
+                      Home
+                    </Link>
+                    <Link to="#" className="text-foreground hover:text-primary">
+                      Categories
+                    </Link>
+                    <Link to="#" className="text-foreground hover:text-primary">
+                      About
+                    </Link>
+                    <Link to="#" className="text-foreground hover:text-primary">
+                      Contact
+                    </Link>
+                    <Link to="#" className="text-foreground hover:text-primary">
+                      Sign In
+                    </Link>
+                  </nav>
+                </SheetContent>
+              </Sheet>
             </div>
-            <nav className="flex items-center">
-              <Button variant="ghost" className="mr-2">
-                Sign In
-              </Button>
-              <Button>Sign Up</Button>
-            </nav>
+          </nav>
+
+          <div className="md:flex items-center gap-4 hidden">
+            <Link
+              to="/signin"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Sign In
+            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/register">Register</Link>
+            </Button>
+          </div>
+          <div className="flex items-center gap-4 absolute right-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <MenuIcon className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <nav className="flex flex-col gap-4">
+                  <Link to="#" className="text-foreground hover:text-primary">
+                    Home
+                  </Link>
+                  <Link to="#" className="text-foreground hover:text-primary">
+                    Categories
+                  </Link>
+                  <Link to="#" className="text-foreground hover:text-primary">
+                    About
+                  </Link>
+                  <Link to="#" className="text-foreground hover:text-primary">
+                    Contact
+                  </Link>
+                  <Link to="#" className="text-foreground hover:text-primary">
+                    Sign In
+                  </Link>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
-
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
-          {/* Featured Blog Posts Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">Featured Posts</h2>
-            <div className="relative">
-              <div className="flex overflow-x-scroll snap-x snap-mandatory scrollbar-hide">
-                {[1, 2, 3].map((post) => (
-                  <div
-                    key={post}
-                    className="snap-start flex-shrink-0 w-full md:w-2/3 lg:w-1/2 pr-4"
-                  >
-                    <Card>
-                      <CardContent className="p-0">
-                        <img
-                          src={`/placeholder.svg?height=400&width=800`}
-                          alt={`Featured post ${post}`}
-                          className="w-full h-64 object-cover"
-                        />
-                      </CardContent>
-                      <CardHeader>
-                        <CardTitle>Featured Post Title {post}</CardTitle>
-                        <p className="text-sm text-muted-foreground">
-                          By Author Name
-                        </p>
-                      </CardHeader>
-                      <CardContent>
-                        <p>
-                          This is a brief excerpt from the featured blog post...
-                        </p>
-                      </CardContent>
-                      <CardFooter>
-                        <Button>Read More</Button>
-                      </CardFooter>
-                    </Card>
+        <section className="bg-muted py-6 md:py-12">
+          <div className="container mx-auto px-4">
+            <Carousel className="max-w-[800px] mx-auto relative">
+              <CarouselContent>
+                <CarouselItem>
+                  <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                    <img
+                      src="/placeholder.svg"
+                      width={400}
+                      height={300}
+                      alt="Featured Post"
+                      className="rounded-lg object-cover w-full md:w-1/2 aspect-[4/3]"
+                    />
+                    <div className="space-y-2 md:space-y-4 md:w-1/2">
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium">John Doe</span> • 2 days
+                        ago
+                      </div>
+                      <h2 className="text-lg md:text-2xl font-bold">
+                        Unlocking the Secrets of Productivity: Tips and Tricks
+                      </h2>
+                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 md:line-clamp-none">
+                        Discover the ultimate guide to boosting your
+                        productivity and achieving more in less time. Unlock the
+                        secrets that will transform your workflow and help you
+                        conquer your goals.
+                      </p>
+                      <Link
+                        to="#"
+                        className="inline-flex items-center gap-2 font-medium text-primary hover:underline"
+                      >
+                        Read More
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </div>
-                ))}
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                    <img
+                      src="/placeholder.svg"
+                      width={400}
+                      height={300}
+                      alt="Featured Post"
+                      className="rounded-lg object-cover w-full md:w-1/2 aspect-[4/3]"
+                    />
+                    <div className="space-y-2 md:space-y-4 md:w-1/2">
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium">Jane Smith</span> • 1 week
+                        ago
+                      </div>
+                      <h2 className="text-lg md:text-2xl font-bold">
+                        The Art of Mindful Living: Cultivating Inner Peace
+                      </h2>
+                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 md:line-clamp-none">
+                        Explore the transformative power of mindfulness and
+                        learn how to incorporate it into your daily life.
+                        Discover the secrets to achieving a more balanced and
+                        fulfilling existence.
+                      </p>
+                      <Link
+                        to="#"
+                        className="inline-flex items-center gap-2 font-medium text-primary hover:underline"
+                      >
+                        Read More
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+              <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 flex justify-between pointer-events-none">
+                <CarouselPrevious className="relative left-0 translate-x-0 pointer-events-auto" />
+                <CarouselNext className="relative right-0 translate-x-0 pointer-events-auto" />
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2"
+            </Carousel>
+          </div>
+        </section>
+        <section className="py-8 md:py-12 lg:py-16">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl md:text-2xl font-bold">Latest Posts</h2>
+              <Link
+                to="#"
+                className="text-primary hover:underline text-sm md:text-base"
               >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+                View All
+              </Link>
             </div>
-          </section>
-
-          {/* Latest Blog Posts Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">Latest Posts</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3, 4, 5, 6].map((post) => (
-                <Card key={post}>
-                  <CardContent className="p-0">
-                    <img
-                      src={`/placeholder.svg?height=200&width=400`}
-                      alt={`Post ${post}`}
-                      className="w-full h-48 object-cover"
-                    />
-                  </CardContent>
-                  <CardHeader>
-                    <CardTitle>Latest Post Title {post}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      By Author Name • {new Date().toLocaleDateString()}
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <p>This is a brief excerpt from the latest blog post...</p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline">Read More</Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          {/* Top Posts Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">Top Posts</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {[1, 2, 3, 4].map((post) => (
-                <Card key={post} className="flex">
-                  <CardContent className="p-0 flex-shrink-0">
-                    <img
-                      src={`/placeholder.svg?height=150&width=150`}
-                      alt={`Top post ${post}`}
-                      className="w-36 h-full object-cover"
-                    />
-                  </CardContent>
-                  <div className="flex flex-col justify-between p-4">
-                    <div>
-                      <CardTitle className="text-lg">
-                        Top Post Title {post}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        1.2k views • 98 comments
-                      </p>
-                    </div>
-                    <Button variant="link" className="self-start p-0">
-                      Read More
-                    </Button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="text-sm text-muted-foreground">
+                    <span className="font-medium">Jane Doe</span> • 3 days ago
                   </div>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          {/* Top Writers Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">Top Writers</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {[1, 2, 3, 4].map((writer) => (
-                <Card key={writer}>
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col items-center text-center">
-                      <Avatar className="w-20 h-20">
-                        <AvatarImage
-                          src={`/placeholder.svg?height=80&width=80`}
-                          alt={`Writer ${writer}`}
-                        />
-                        <AvatarFallback>W{writer}</AvatarFallback>
-                      </Avatar>
-                      <h3 className="mt-4 font-semibold">
-                        Writer Name {writer}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Short bio goes here...
-                      </p>
-                      <p className="text-sm mt-2">42 posts • 1.5k followers</p>
-                      <Button className="mt-4">Follow</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          {/* Categories/Tags Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">Categories</h2>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Technology",
-                "Lifestyle",
-                "Food",
-                "Travel",
-                "Health",
-                "Fashion",
-              ].map((category) => (
-                <Button key={category} variant="outline">
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </section>
-
-          {/* Call to Action (CTA) */}
-          <section className="mb-12 bg-primary text-primary-foreground rounded-lg p-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-            <p className="mb-6">
-              Subscribe to our newsletter for the latest blog posts and updates.
-            </p>
-            <div className="flex max-w-md mx-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="rounded-r-none"
-              />
-              <Button className="rounded-l-none">Subscribe</Button>
-            </div>
-          </section>
-
-          {/* Optional Advertisement Section */}
-          <section className="mb-12">
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Advertisement
-                </p>
-                <div className="bg-muted h-32 flex items-center justify-center">
-                  <p>Your Ad Here</p>
+                  <h3 className="text-lg font-bold mt-2">
+                    Mastering the Art of Baking: Delicious Recipes and
+                    Techniques
+                  </h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    Discover the secrets to baking the perfect cakes, cookies,
+                    and pastries. Learn from expert bakers and impress your
+                    friends and family with your newfound skills.
+                  </p>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
                 </div>
-              </CardContent>
-            </Card>
-          </section>
-        </div>
+              </Card>
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="text-sm text-muted-foreground">
+                    <span className="font-medium">John Smith</span> • 1 week ago
+                  </div>
+                  <h3 className="text-lg font-bold mt-2">
+                    Exploring the Wonders of Nature: A Hiking Guide
+                  </h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    Embark on a journey through the great outdoors and discover
+                    the beauty of nature. Learn essential hiking tips, gear
+                    recommendations, and the best trails to explore.
+                  </p>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </Card>
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="text-sm text-muted-foreground">
+                    <span className="font-medium">Sarah Lee</span> • 2 weeks ago
+                  </div>
+                  <h3 className="text-lg font-bold mt-2">
+                    The Ultimate Guide to Sustainable Living
+                  </h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    Discover practical tips and strategies to live a more
+                    environmentally-friendly lifestyle. From reducing waste to
+                    adopting renewable energy, this guide will help you make a
+                    positive impact.
+                  </p>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+        <section className="bg-muted py-8 md:py-12 lg:py-16">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl md:text-2xl font-bold">Top Posts</h2>
+              <Link
+                to="#"
+                className="text-primary hover:underline text-sm md:text-base"
+              >
+                View All
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">John Doe</span> • 1 month
+                      ago
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <EyeIcon className="w-4 h-4" />
+                      <span>10k</span>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold mt-2">
+                    The Future of Artificial Intelligence: Opportunities and
+                    Challenges
+                  </h3>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </Card>
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">Jane Smith</span> • 2 months
+                      ago
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <EyeIcon className="w-4 h-4" />
+                      <span>8k</span>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold mt-2">
+                    The Art of Minimalist Living: Decluttering and Finding Joy
+                  </h3>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </Card>
+              <Card>
+                <CardContent className="p-0">
+                  <img
+                    src="/placeholder.svg"
+                    width={400}
+                    height={225}
+                    alt="Blog Post"
+                    className="rounded-t-lg object-cover w-full aspect-video"
+                  />
+                </CardContent>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">Sarah Lee</span> • 3 months
+                      ago
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <EyeIcon className="w-4 h-4" />
+                      <span>6k</span>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold mt-2">
+                    The Power of Positive Thinking: Transforming Your Mindset
+                  </h3>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+        <section className="py-8 md:py-12 lg:py-16">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl md:text-2xl font-bold">Top Writers</h2>
+              <Link
+                to="#"
+                className="text-primary hover:underline text-sm md:text-base"
+              >
+                View All
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <Card>
+                <CardContent className="p-4 flex flex-col items-center">
+                  <Avatar className="w-16 h-16 mb-4">
+                    <AvatarImage src="/placeholder-user.jpg" alt="John Doe" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                  <h3 className="text-lg font-bold">John Doe</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Tech Enthusiast
+                  </p>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <FilePenIcon className="w-4 h-4" />
+                      <span>125 Posts</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <UsersIcon className="w-4 h-4" />
+                      <span>10k Followers</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="mt-4 w-full">
+                    Follow
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 flex flex-col items-center">
+                  <Avatar className="w-16 h-16 mb-4">
+                    <AvatarImage src="/placeholder-user.jpg" alt="Jane Smith" />
+                    <AvatarFallback>JS</AvatarFallback>
+                  </Avatar>
+                  <h3 className="text-lg font-bold">Jane Smith</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Travel Blogger
+                  </p>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <FilePenIcon className="w-4 h-4" />
+                      <span>98 Posts</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <UsersIcon className="w-4 h-4" />
+                      <span>8k Followers</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="mt-4 w-full">
+                    Follow
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 flex flex-col items-center">
+                  <Avatar className="w-16 h-16 mb-4">
+                    <AvatarImage
+                      src="/placeholder-user.jpg"
+                      alt="Mike Johnson"
+                    />
+                    <AvatarFallback>MJ</AvatarFallback>
+                  </Avatar>
+                  <h3 className="text-lg font-bold">Mike Johnson</h3>
+                  <p className="text-muted-foreground text-sm">Food Critic</p>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <FilePenIcon className="w-4 h-4" />
+                      <span>76 Posts</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <UsersIcon className="w-4 h-4" />
+                      <span>5k Followers</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="mt-4 w-full">
+                    Follow
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 flex flex-col items-center">
+                  <Avatar className="w-16 h-16 mb-4">
+                    <AvatarImage src="/placeholder-user.jpg" alt="Emily Chen" />
+                    <AvatarFallback>EC</AvatarFallback>
+                  </Avatar>
+                  <h3 className="text-lg font-bold">Emily Chen</h3>
+                  <p className="text-muted-foreground text-sm">Fitness Guru</p>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <FilePenIcon className="w-4 h-4" />
+                      <span>112 Posts</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <UsersIcon className="w-4 h-4" />
+                      <span>12k Followers</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="mt-4 w-full">
+                    Follow
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <h3 className="font-semibold mb-4">About Us</h3>
-              <p className="text-sm text-muted-foreground">
-                BlogApp is your go-to platform for insightful articles on
-                various topics.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link to="/about">About</Link>
-                </li>
-                <li>
-                  <Link to="/privacy">Privacy Policy</Link>
-                </li>
-                <li>
-                  <Link to="/terms">Terms of Service</Link>
-                </li>
-                <li>
-                  <Link to="/contact">Contact</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-facebook"
-                  >
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                  </svg>
-                </a>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-twitter"
-                  >
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-                  </svg>
-                </a>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-instagram"
-                  >
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Newsletter</h3>
-              <form className="flex">
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  className="rounded-r-none"
-                />
-                <Button type="submit" className="rounded-l-none">
-                  Subscribe
-                </Button>
-              </form>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>
-              &copy; {new Date().getFullYear()} BlogApp. All rights reserved.
-            </p>
-          </div>
+      <footer className="bg-background border-t py-6">
+        <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
+          © 2024 Blog App. All rights reserved.
         </div>
       </footer>
     </div>

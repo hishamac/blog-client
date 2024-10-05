@@ -18,54 +18,36 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
-export default function Login() {
-  const { login } = useUserStore();
+export default function UserRegister() {
+  const { register } = useUserStore();
+
   const formSchema = z.object({
+    name: z.string().min(5, {
+      message: "Name must be at least 5 characters.",
+    }),
     email: z.string().email("Email must be Valid"),
     password: z.string().min(5, "Password must be at least 5 characters long"),
+    profilePicture: z.instanceof(FileList).optional(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const checkLoggedIn = () => {
-    const token = localStorage.getItem("user");
-
-    if (!token) {
-      navigate("/login");
-    }
-
-    try {
-      const user: any = jwtDecode(token as string);
-      if (user.role === "admin" || user.role === "blogger") {
-        navigate("/p");
-      } else {
-        navigate("/login");
-      }
-    } catch (error) {
-      navigate("/login");
-    }
-  };
+  const fileRef = form.register("profilePicture");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    const { email, password } = values;
-    login(email, password);
+    const { name, email, password, profilePicture } = values;
+    register(email, name, password, profilePicture);
   }
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, []);
-
   return (
-    <main className="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 w-full h-screen">
+    <main className="flex-1 flex items-center justify-center  w-full">
       <div className="w-full max-w-md space-y-4">
         <Card>
           <div className="text-center mt-10">
-            <h1 className="text-3xl font-bold tracking-tight">Login</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Register</h1>
           </div>
           <CardContent className="space-y-4">
             <Form {...form}>
@@ -73,6 +55,36 @@ export default function Login() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profilePicture"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Profile Picture</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your Profile Picture"
+                          type="file"
+                          {...fileRef}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -105,10 +117,12 @@ export default function Login() {
                   )}
                 />
                 <Button
-                  className={`w-full opacity-100 cursor-pointer`}
+                  className={`
+                  w-full opacity-100 cursor-pointer            
+                `}
                   type="submit"
                 >
-                  Login
+                  Register
                 </Button>
               </form>
             </Form>

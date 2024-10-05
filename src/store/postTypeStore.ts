@@ -5,6 +5,8 @@ import { create } from "zustand";
 interface PostTypeStore {
   isNull: boolean;
   setIsNull: (isNull: boolean) => void;
+  isViewOpen: boolean;
+  setIsViewOpen: (isViewOpen: boolean) => void;
   isCreateOpen: boolean;
   setIsCreateOpen: (isCreateOpen: boolean) => void;
   isUpdateOpen: boolean;
@@ -12,41 +14,42 @@ interface PostTypeStore {
   isDeleteOpen: boolean;
   setIsDeleteOpen: (isDeleteOpen: boolean) => void;
   postType: {
-    _id: string;
-    name: string;
+    [x: string]: any;
   } | null;
-  setPostType: (postType: { _id: string; name: string }) => void;
+  setPostType: (postType: { _id: string; name: string } | null) => void;
   postTypes: {
-    _id: string;
-    name: string;
+    [x: string]: any;
   }[];
   setPostTypes: (
     postTypes: {
-      _id: string;
-      name: string;
+      [x: string]: any;
     }[]
   ) => void;
   errorMessage: string;
-  createPostType: (name: string) => void;
+  createPostType: (values: { [x: string]: any }) => void;
   getPostTypes: () => void;
   getPostType: (_id: string) => void;
   updatePostType: (_id: string, { name }: { name: string }) => void;
   deletePostType: (_id: string) => void;
+  toView: {
+    [x: string]: any;
+  } | null;
+  setToView: (toView: { [x: string]: any }) => void;
   toUpdate: {
-    _id: string;
-    name: string;
+    [x: string]: any;
   } | null;
-  setToUpdate: (toUpdate: { _id: string; name: string }) => void;
+  setToUpdate: (toUpdate: { [x: string]: any }) => void;
   toDelete: {
-    _id: string;
-    name: string;
+    [x: string]: any;
   } | null;
-  setToDelete: (toDelete: { _id: string; name: string }) => void;
+  setToDelete: (toDelete: { [x: string]: any }) => void;
 }
 
 export const usePostTypeStore = create<PostTypeStore>((set) => ({
   isNull: false,
   setIsNull: (isNull) => set({ isNull }),
+  isViewOpen: false,
+  setIsViewOpen: (isViewOpen) => set({ isViewOpen }),
   isCreateOpen: false,
   setIsCreateOpen: (isCreateOpen) => set({ isCreateOpen }),
   isUpdateOpen: false,
@@ -55,6 +58,8 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
   setIsDeleteOpen: (isDeleteOpen) => set({ isDeleteOpen }),
   postType: null,
   setPostType: (postType) => set({ postType }),
+  toView: null,
+  setToView: (toView) => set({ toView }),
   toUpdate: null,
   setToUpdate: (toUpdate) => set({ toUpdate }),
   toDelete: null,
@@ -62,7 +67,7 @@ export const usePostTypeStore = create<PostTypeStore>((set) => ({
   postTypes: [],
   setPostTypes: (postTypes) => set({ postTypes }),
   errorMessage: "",
-  createPostType: async (name) => {
+  createPostType: async ({ name }) => {
     set({ isNull: false });
     set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Post Type...");

@@ -23,6 +23,9 @@ import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import ReactQuill from "react-quill";
+import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/passwordInput";
 
 interface Input {
   name: string;
@@ -87,7 +90,7 @@ export default function Update({
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-4"
                   >
-                    <div className=" h-[40vh] overflow-auto">
+                    <div className=" max-h-[40vh] overflow-auto">
                       {inputs?.map((input) => (
                         <>
                           {input?.type === "text" ? (
@@ -193,6 +196,37 @@ export default function Update({
                                       }}
                                       id={input.name} // Ensure the id is the input name for accessibility
                                       className="mt-1 block" // Styling
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : input?.type === "rte" ? (
+                            <>
+                              <Label>{input?.viewName}</Label>
+                              <ReactQuill
+                                className="mt-2 h-48 mb-12"
+                                theme="snow"
+                                value={form.watch(input.name)}
+                                onChange={(value) =>
+                                  form.setValue(input.name, value)
+                                }
+                              />
+                            </>
+                          ) : input.type === "password" ? (
+                            <FormField
+                              control={form.control}
+                              name={`${input?.name}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <div className="flex items-center justify-between">
+                                    <FormLabel>Password</FormLabel>
+                                  </div>
+                                  <FormControl>
+                                    <PasswordInput
+                                      placeholder={`Enter your ${input?.viewName}`}
+                                      {...field}
                                     />
                                   </FormControl>
                                   <FormMessage />
