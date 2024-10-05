@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SearchIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePostStore } from "@/store/postStore";
 import { formatDate } from "@/utils/formatDate";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // Mock data for posts
 // const posts = [

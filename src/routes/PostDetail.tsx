@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { usePostStore } from "@/store/postStore";
+import { formatDate } from "@/utils/formatDate";
 import {
-  ArrowLeftIcon,
   CalendarIcon,
   ClockIcon,
   HeartIcon,
   MessageSquareIcon,
-  ShareIcon,
+  ShareIcon
 } from "lucide-react";
-import { usePostStore } from "@/store/postStore";
-import { formatDate } from "@/utils/formatDate";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 
 interface PostDetailProps {
   id?: string;

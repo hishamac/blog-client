@@ -1,8 +1,8 @@
 import Axios from "@/utils/Axios";
 import { uploadImageToCloudinary } from "@/utils/cloudinary";
+import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-import { jwtDecode } from "jwt-decode";
 
 interface Post {
   _id: string;

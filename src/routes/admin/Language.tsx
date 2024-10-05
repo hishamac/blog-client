@@ -21,14 +21,10 @@ import Delete from "../crud/Delete";
 export default function Language() {
   const {
     languages,
-    setLanguages,
     createLanguage,
     getLanguages,
-    getLanguage,
     updateLanguage,
     deleteLanguage,
-    language,
-    setLanguage,
     isCreateOpen,
     setIsCreateOpen,
     isViewOpen,
@@ -38,7 +34,6 @@ export default function Language() {
     isDeleteOpen,
     setIsDeleteOpen,
     errorMessage,
-    toView,
     setToView,
     toUpdate,
     setToUpdate,

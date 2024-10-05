@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import {
-  DialogFooter,
-  DialogHeader,
   Dialog,
   DialogContent,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";

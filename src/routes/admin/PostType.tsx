@@ -1,23 +1,22 @@
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { MoreVerticalIcon, EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { usePostStore } from "@/store/postStore";
-import { formatDate } from "@/utils/formatDate";
-import { z } from "zod";
-import { usePostTypeStore } from "@/store/postTypeStore";
-import Create from "../crud/Create";
-import Update from "../crud/Update";
-import PostDetail from "../PostDetail";
-import Delete from "../crud/Delete";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePostStore } from "@/store/postStore";
+import { usePostTypeStore } from "@/store/postTypeStore";
+import { formatDate } from "@/utils/formatDate";
+import { EyeIcon, MoreVerticalIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useEffect } from "react";
+import { z } from "zod";
+import Create from "../crud/Create";
+import Delete from "../crud/Delete";
+import Update from "../crud/Update";
 import Posts from "../Posts";
 
 export default function PostType() {
@@ -33,7 +32,6 @@ export default function PostType() {
     setIsCreateOpen,
     isUpdateOpen,
     setIsUpdateOpen,
-    toView,
     setToView,
     toUpdate,
     setToUpdate,

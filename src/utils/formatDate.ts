@@ -67,7 +67,6 @@ export function getTimeFromDate(dateString: string) {
 
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
   const ampm = hours >= 12 ? "PM" : "AM";
 
   return `${hours}:${minutes} ${ampm}`;
