@@ -11,7 +11,7 @@ export default function Header() {
   useEffect(() => {
     localStorage.getItem("user") &&
       getUser((jwtDecode(localStorage.getItem("user") as string) as any).id);
-  });
+  },[]);
   return (
     <header className="bg-background border-b sticky top-0 z-20 w-full">
       <div className="container mx-auto px-4 flex justify-between items-center h-16">
@@ -43,6 +43,16 @@ export default function Header() {
             <p className="text-sm font-medium text-primary">Logged In as</p>
             <Button asChild variant="outline" size="sm">
               <p>{user?.name}</p>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                localStorage.removeItem("user");
+              }}
+            >
+              <p>Logout</p>
             </Button>
           </div>
         ) : (
