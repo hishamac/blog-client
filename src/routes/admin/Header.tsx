@@ -3,8 +3,11 @@ import { Sheet, SheetContent, SheetTrigger } from "../../components/ui/sheet";
 import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useUserStore } from "@/store/userStore";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Header() {
+  const { logout } = useUserStore();
   return (
     <header className="bg-background border-b sticky top-0 z-20 w-full">
       <div className="container mx-auto px-4 flex justify-between items-center h-16">
@@ -65,6 +68,18 @@ export default function Header() {
                 ).role.toUpperCase()}
               </p>
             </Button>
+            <Button
+              className="cursor-pointer"
+              asChild
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                logout();
+              }}
+            >
+              <p>Logout</p>
+            </Button>
+            <ModeToggle />
           </div>
         )}
 

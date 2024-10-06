@@ -41,6 +41,7 @@ interface UserStore {
     profileFile: FileList | undefined
   ) => void;
   login: (email: string, password: string) => void;
+  logout: () => void;
   getUsers: () => void;
   getUser: (_id: string) => void;
   updateUser: (_id: string, values: { [x: string]: any }) => void;
@@ -457,5 +458,15 @@ export const useUserStore = create<UserStore>((set) => ({
           duration: 3000,
         });
       });
+  },
+  logout: () => {
+    const loadingToast = toast.loading("Logging Out");
+
+    localStorage.removeItem("user");
+
+    toast.success("Logged Out", {
+      id: loadingToast,
+      duration: 3000,
+    });
   },
 }));

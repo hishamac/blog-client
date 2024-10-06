@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/userStore";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Header() {
-  const { getUser, user } = useUserStore();
+  const { getUser, user, logout } = useUserStore();
   useEffect(() => {
     localStorage.getItem("user") &&
       getUser((jwtDecode(localStorage.getItem("user") as string) as any).id);
-  },[]);
+  }, []);
   return (
     <header className="bg-background border-b sticky top-0 z-20 w-full">
       <div className="container mx-auto px-4 flex justify-between items-center h-16">
@@ -45,20 +46,22 @@ export default function Header() {
               <p>{user?.name}</p>
             </Button>
             <Button
+              className="cursor-pointer"
               asChild
               variant="outline"
               size="sm"
               onClick={() => {
-                localStorage.removeItem("user");
+                logout();
               }}
             >
               <p>Logout</p>
             </Button>
+            <ModeToggle />
           </div>
         ) : (
           <div className="md:flex items-center gap-4 hidden">
             <Link
-              to="/signin"
+              to="/login"
               className="text-sm font-medium text-primary hover:underline"
             >
               Sign In
@@ -66,6 +69,7 @@ export default function Header() {
             <Button asChild variant="outline" size="sm">
               <Link to="/register">Register</Link>
             </Button>
+            <ModeToggle />
           </div>
         )}
 
