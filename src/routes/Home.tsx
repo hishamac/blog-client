@@ -11,21 +11,24 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { usePostStore } from "@/store/postStore";
-import {
-  ArrowRightIcon,
-  FilePenIcon,
-  UsersIcon
-} from "lucide-react";
+import { ArrowRightIcon, EyeIcon, FilePenIcon, UsersIcon } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
+import { useUserStore } from "@/store/userStore";
+import { jwtDecode } from "jwt-decode";
+import navigate from "@/utils/navigate";
 
 export default function Home() {
   const { posts, getPosts } = usePostStore();
+  const { users, getUsers, followUser, unFollowUser } = useUserStore();
 
   useEffect(() => {
     if (posts.length === 0) {
       getPosts();
+    }
+    if (users.length === 0) {
+      getUsers();
     }
   }, []);
   return (
@@ -147,112 +150,90 @@ export default function Home() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl md:text-2xl font-bold">Top Writers</h2>
               <Link
-                to="#"
+                to="/bloggers"
                 className="text-primary hover:underline text-sm md:text-base"
               >
                 View All
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardContent className="p-4 flex flex-col items-center">
-                  <Avatar className="w-16 h-16 mb-4">
-                    <AvatarImage src="/placeholder-user.jpg" alt="John Doe" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-lg font-bold">John Doe</h3>
-                  <p className="text-muted-foreground text-sm">
-                    Tech Enthusiast
-                  </p>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <FilePenIcon className="w-4 h-4" />
-                      <span>125 Posts</span>
+              {users.slice(0, 4).map((usr) => (
+                <Card>
+                  <CardContent className="p-4 flex flex-col items-center">
+                    <Avatar className="w-16 h-16 mb-4">
+                      <AvatarImage
+                        src="/placeholder-usr.jpg"
+                        alt={`${usr.name}`}
+                      />
+                      <AvatarFallback>
+                        {usr.name
+                          .split(" ")
+                          .map((n: string) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <h3 className="text-lg font-bold">{usr.name}</h3>
+                    <div className="flex items-center gap-4 mt-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <FilePenIcon className="w-4 h-4" />
+                        <span>{usr.posts.length} Posts</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <UsersIcon className="w-4 h-4" />
+                        <span>{usr.followers.length} Followers</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <UsersIcon className="w-4 h-4" />
-                      <span>10k Followers</span>
+                    <div className=" flex w-full gap-2">
+                      {localStorage.getItem("user") ? (
+                        <>
+                          {usr.followers.includes(
+                            (
+                              jwtDecode(
+                                localStorage.getItem("user") as string
+                              ) as any
+                            ).id
+                          ) ? (
+                            <Button
+                              variant={"secondary"}
+                              className="mt-4 w-2/3"
+                              onClick={() => {
+                                unFollowUser(usr._id);
+                              }}
+                            >
+                              Unfollow
+                            </Button>
+                          ) : (
+                            <Button
+                              className="mt-4 w-2/3"
+                              onClick={() => {
+                                followUser(usr._id);
+                              }}
+                            >
+                              Follow
+                            </Button>
+                          )}
+                        </>
+                      ) : (
+                        <Link to="/login">
+                          <Button className="mt-4 w-2/3">Follow</Button>
+                        </Link>
+                      )}
+
+                      <Button
+                        variant="outline"
+                        className="mt-4 w-1/3"
+                        onClick={() => {
+                          navigate(`/bloggers/${usr._id}`);
+                        }}
+                      >
+                        <Link to={`/bloggers/${usr._id}`}>
+                          <EyeIcon className="w-4 h-4" />
+                        </Link>
+                      </Button>
                     </div>
-                  </div>
-                  <Button variant="outline" className="mt-4 w-full">
-                    Follow
-                  </Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 flex flex-col items-center">
-                  <Avatar className="w-16 h-16 mb-4">
-                    <AvatarImage src="/placeholder-user.jpg" alt="Jane Smith" />
-                    <AvatarFallback>JS</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-lg font-bold">Jane Smith</h3>
-                  <p className="text-muted-foreground text-sm">
-                    Travel Blogger
-                  </p>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <FilePenIcon className="w-4 h-4" />
-                      <span>98 Posts</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <UsersIcon className="w-4 h-4" />
-                      <span>8k Followers</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="mt-4 w-full">
-                    Follow
-                  </Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 flex flex-col items-center">
-                  <Avatar className="w-16 h-16 mb-4">
-                    <AvatarImage
-                      src="/placeholder-user.jpg"
-                      alt="Mike Johnson"
-                    />
-                    <AvatarFallback>MJ</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-lg font-bold">Mike Johnson</h3>
-                  <p className="text-muted-foreground text-sm">Food Critic</p>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <FilePenIcon className="w-4 h-4" />
-                      <span>76 Posts</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <UsersIcon className="w-4 h-4" />
-                      <span>5k Followers</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="mt-4 w-full">
-                    Follow
-                  </Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 flex flex-col items-center">
-                  <Avatar className="w-16 h-16 mb-4">
-                    <AvatarImage src="/placeholder-user.jpg" alt="Emily Chen" />
-                    <AvatarFallback>EC</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-lg font-bold">Emily Chen</h3>
-                  <p className="text-muted-foreground text-sm">Fitness Guru</p>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <FilePenIcon className="w-4 h-4" />
-                      <span>112 Posts</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <UsersIcon className="w-4 h-4" />
-                      <span>12k Followers</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="mt-4 w-full">
-                    Follow
-                  </Button>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
