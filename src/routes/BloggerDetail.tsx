@@ -1,16 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePostStore } from "@/store/postStore";
 import { useUserStore } from "@/store/userStore";
-import {
-  Users
-} from "lucide-react";
+import { Users } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -37,12 +31,17 @@ export default function BloggerDetail({ id }: BloggerDetailProps) {
   const { _id } = useParams();
 
   const { user, getUser, errorMessage, isNull } = useUserStore();
+  const { getPosts, posts } = usePostStore();
 
   useEffect(() => {
     if (id) {
       getUser(id);
     } else {
       getUser(_id as string);
+    }
+
+    if (posts.length === 0) {
+      getPosts();
     }
   }, []);
   // Mock data for the blogger
@@ -152,14 +151,9 @@ export default function BloggerDetail({ id }: BloggerDetailProps) {
 
           <h2 className="text-2xl font-bold mb-4">Latest Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogger?.posts.map((post: any) => (
+            {posts.map((post: any) => (
               <Card key={post._id} className="flex flex-col h-full">
                 <CardContent className="p-0">
-                  <img
-                    src={post.imageUrl}
-                    alt={post.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
                   <div className="p-4 flex flex-col flex-grow">
                     <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
                     <p className="text-muted-foreground mb-4 flex-grow">
