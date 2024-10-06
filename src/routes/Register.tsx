@@ -40,6 +40,7 @@ export default function Register() {
     console.log(values);
     const { name, email, password, profilePicture } = values;
     register(email, name, password, profilePicture);
+    navigate("/p")
   }
 
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export default function Register() {
     const token = localStorage.getItem("user");
 
     if (!token) {
-      navigate("/login");
+      null;
     }
 
     try {
@@ -56,10 +57,10 @@ export default function Register() {
       if (user.role === "admin" || user.role === "blogger") {
         navigate("/p");
       } else {
-        navigate("/login");
+        null;
       }
     } catch (error) {
-      navigate("/login");
+      null;
     }
   }, []);
 

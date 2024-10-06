@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const Axios = () =>
   axios.create({
-    baseURL: "https://blog-server-bay.vercel.app",
+    baseURL: "http://localhost:3000",
   });
 
 export default Axios();

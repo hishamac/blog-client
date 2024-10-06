@@ -9,7 +9,7 @@ import {
   ClockIcon,
   HeartIcon,
   MessageSquareIcon,
-  ShareIcon
+  ShareIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -28,6 +28,7 @@ export default function PostDetail({ id }: PostDetailProps) {
     errorMessage,
     setPost,
     setIsNull,
+    likePost,
   } = usePostStore();
   const { _id } = useParams();
 
@@ -105,9 +106,6 @@ export default function PostDetail({ id }: PostDetailProps) {
           <div className="grid grid-cols-1 gap-8">
             <div>
               <h1 className="text-3xl font-bold mb-4">{post?.title}</h1>
-              <div className="w-full max-h-96 object-cover overflow-auto">
-                <img className="w-full " src={`${post?.imageUrl}`} />
-              </div>
               <div className="flex items-center mt-3">
                 <Avatar className="h-10 w-10 mr-2">
                   <AvatarImage
@@ -141,7 +139,12 @@ export default function PostDetail({ id }: PostDetailProps) {
               />
 
               <div className="flex items-center justify-between border-t border-b py-4 mb-6">
-                <Button variant="ghost">
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    likePost(post?._id as string);
+                  }}
+                >
                   <HeartIcon className="mr-2 h-5 w-5" />
                   {post?.likes} Likes
                 </Button>
@@ -170,11 +173,6 @@ export default function PostDetail({ id }: PostDetailProps) {
                   >
                     <Card key={post?._id} className="cursor-pointer ">
                       <CardContent className="p-4 flex items-center space-x-4">
-                        <img
-                          src={post?.imageUrl}
-                          alt={post?.title}
-                          className="w-20 h-20 object-cover rounded"
-                        />
                         <div>
                           <p className="font-semibold">{post?.title}</p>
                           <p className="text-sm text-muted-foreground">

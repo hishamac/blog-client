@@ -37,7 +37,6 @@ interface CreateProps {
   formSchema: z.ZodObject<any, any>;
   createItem: any;
   inputs: Input[];
-  fileRefValue?: string;
   title: string;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -48,15 +47,12 @@ export default function Create({
   createItem,
   inputs,
   title,
-  fileRefValue,
   open,
   setOpen,
 }: CreateProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
-  const fileRef = form.register(`${fileRefValue as string}`);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -112,24 +108,6 @@ export default function Create({
                                       <Textarea
                                         placeholder={`Enter ${title} ${input?.viewName}`}
                                         {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            ) : input.type === "file" ? (
-                              <FormField
-                                control={form.control}
-                                name={`${input?.name}`}
-                                render={({  }) => (
-                                  <FormItem>
-                                    <FormLabel>{input?.viewName}</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        placeholder={`Enter your ${input?.viewName}`}
-                                        type="file"
-                                        {...fileRef}
                                       />
                                     </FormControl>
                                     <FormMessage />

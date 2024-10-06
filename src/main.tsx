@@ -1,10 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import {
-  createBrowserRouter,
-  Outlet,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
@@ -18,7 +14,11 @@ import BloggerProtected from "./routes/protected/Blogger";
 import Home from "./routes/Home";
 import Posts from "./routes/Posts";
 import User from "./routes/admin/User";
+import HeaderUser from "./routes/Header";
 import Header from "./routes/admin/Header";
+import Bloggers from "./routes/Bloggers";
+import Footer from "./routes/Footer";
+import BloggerDetail from "./routes/BloggerDetail";
 
 const router = createBrowserRouter([
   {
@@ -37,8 +37,9 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <>
-        <Header />
+        <HeaderUser />
         <Outlet />
+        <Footer />
       </>
     ),
     children: [
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
       {
         path: "posts/:_id",
         element: <PostDetail />,
+      },
+      {
+        path: "bloggers",
+        element: <Bloggers />,
+      },
+      {
+        path: "bloggers/:_id",
+        element: <BloggerDetail />,
       },
     ],
   },
@@ -61,6 +70,7 @@ const router = createBrowserRouter([
           <div>
             <Header />
             <Outlet />
+            <Footer />
           </div>
         ),
         children: [

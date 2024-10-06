@@ -1,5 +1,4 @@
 import Axios from "@/utils/Axios";
-import { uploadImageToCloudinary } from "@/utils/cloudinary";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import { create } from "zustand";
@@ -72,6 +71,9 @@ interface PostStore {
   setToUpdate: (toUpdate: Post) => void;
   toDelete: Post | null;
   setToDelete: (toDelete: Post) => void;
+  getPostsByAuthor: (authorId: string) => void;
+  getPostsByType: (typeId: string) => void;
+  likePost: (_id: string) => void;
 }
 
 export const usePostStore = create<PostStore>((set) => ({
@@ -101,7 +103,6 @@ export const usePostStore = create<PostStore>((set) => ({
     set({ errorMessage: "" });
     const loadingToast = toast.loading("Creating Post...");
 
-    const imageUrl = await uploadImageToCloudinary(postData.imageUrl[0]);
     const decodedToken: any = jwtDecode(localStorage.getItem("user") as string);
     await Axios.post(
       "/api/posts",
@@ -111,7 +112,6 @@ export const usePostStore = create<PostStore>((set) => ({
         content: postData.content,
         type: postData.type,
         status: postData.status,
-        imageUrl,
         isActive: postData.isActive,
         author: decodedToken?.id as string,
       },
@@ -128,7 +128,7 @@ export const usePostStore = create<PostStore>((set) => ({
             duration: 3000,
           });
           set((state) => ({
-            posts: [...state.posts, response.data],
+            posts: [response.data, ...state.posts],
           }));
           set({ isCreateOpen: false });
           set({ isNull: false });
@@ -177,6 +177,52 @@ export const usePostStore = create<PostStore>((set) => ({
         });
       });
   },
+  getPostsByAuthor: async (authorId) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
+    Axios.get(`/api/posts/authors/${authorId}`)
+      .then((response) => {
+        if (response.status === 201) {
+          set({ posts: response.data });
+          set({ isNull: false });
+        } else if (response.status === 200) {
+          set({
+            errorMessage:
+              response.data?.message || "Error Happened While Fetching Posts",
+          });
+        } else {
+          set({ errorMessage: "Error Happened While Fetching Posts" });
+        }
+      })
+      .catch((error) => {
+        set({
+          errorMessage: error?.message || "Error Happened While Fetching Posts",
+        });
+      });
+  },
+  getPostsByType: async (typeId) => {
+    set({ isNull: false });
+    set({ errorMessage: "" });
+    Axios.get(`/api/posts/types/${typeId}`)
+      .then((response) => {
+        if (response.status === 201) {
+          set({ posts: response.data });
+          set({ isNull: false });
+        } else if (response.status === 200) {
+          set({
+            errorMessage:
+              response.data?.message || "Error Happened While Fetching Posts",
+          });
+        } else {
+          set({ errorMessage: "Error Happened While Fetching Posts" });
+        }
+      })
+      .catch((error) => {
+        set({
+          errorMessage: error?.message || "Error Happened While Fetching Posts",
+        });
+      });
+  },
   getPost: async (_id) => {
     set({ isNull: false });
     set({ errorMessage: "" });
@@ -204,10 +250,6 @@ export const usePostStore = create<PostStore>((set) => ({
     set({ isNull: false });
     set({ errorMessage: "" });
     const loadingToast = toast.loading("Updating Post...");
-    let imageUrl;
-    if (postData.imageUrl.length > 0) {
-      imageUrl = await uploadImageToCloudinary(postData.imageUrl[0]);
-    }
     await Axios.put(
       `/api/posts/${_id}`,
       {
@@ -216,7 +258,6 @@ export const usePostStore = create<PostStore>((set) => ({
         content: postData.content,
         type: postData.type,
         status: postData.status,
-        imageUrl,
         isActive: postData.isActive,
       },
       {
@@ -297,6 +338,54 @@ export const usePostStore = create<PostStore>((set) => ({
       })
       .catch((error) => {
         toast.error(error?.message || "Error Happened While Deleting Post", {
+          id: loadingToast,
+          duration: 3000,
+        });
+      });
+  },
+  likePost: async (_id) => {
+    const loadingToast = toast.loading("Liking Post");
+    const decodedToken: any = jwtDecode(localStorage.getItem("user") as string);
+
+    await Axios.post(
+      `/api/posts/like/${_id}`,
+      {
+        userId: decodedToken.id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success("Post Liked Successfully", {
+            id: loadingToast,
+            duration: 3000,
+          });
+          set((state) => ({
+            posts: state.posts.map((post) =>
+              post._id === _id ? { ...post, likes: post.likes + 1 } : post
+            ),
+          }));
+        } else if (response.status === 200) {
+          toast.error(
+            response.data?.message || "Error Happened While Liking Post",
+            {
+              id: loadingToast,
+              duration: 3000,
+            }
+          );
+        } else {
+          toast.error("Error Happened While Liking Post", {
+            id: loadingToast,
+            duration: 3000,
+          });
+        }
+      })
+      .catch((error) => {
+        toast.error(error?.message || "Error Happened While Liking Post", {
           id: loadingToast,
           duration: 3000,
         });

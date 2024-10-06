@@ -32,6 +32,7 @@ export default function PostType() {
     setIsCreateOpen,
     isUpdateOpen,
     setIsUpdateOpen,
+    toView,
     setToView,
     toUpdate,
     setToUpdate,
@@ -176,7 +177,6 @@ export default function PostType() {
         title="Post Type"
         open={isCreateOpen}
         setOpen={setIsCreateOpen}
-        fileRefValue="imageUrl"
       />
       <Update
         formSchema={updateFormSchema}
@@ -186,13 +186,12 @@ export default function PostType() {
         open={isUpdateOpen}
         setOpen={setIsUpdateOpen}
         itemToUpdate={toUpdate}
-        fileRefValue="imageUrl"
       />
       <>
         {isViewOpen && (
           <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
             <DialogContent className="max-w-[95vw] w-full max-h-[95vh]  flex flex-col rounded-lg overflow-auto">
-              <Posts />
+              <Posts typeId={toView?._id}/>
             </DialogContent>
           </Dialog>
         )}

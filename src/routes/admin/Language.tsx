@@ -204,7 +204,6 @@ export default function Language() {
         title="Post Type"
         open={isCreateOpen}
         setOpen={setIsCreateOpen}
-        fileRefValue="imageUrl"
       />
       <Update
         formSchema={updateFormSchema}
@@ -214,7 +213,6 @@ export default function Language() {
         open={isUpdateOpen}
         setOpen={setIsUpdateOpen}
         itemToUpdate={toUpdate}
-        fileRefValue="imageUrl"
       />
       <>
         {isViewOpen && (

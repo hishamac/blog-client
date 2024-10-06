@@ -1,5 +1,6 @@
 import Axios from "@/utils/Axios";
 import { uploadImageToCloudinary } from "@/utils/cloudinary";
+import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -33,6 +34,12 @@ interface UserStore {
     password: string,
     profileFile: FileList | undefined
   ) => void;
+  userRegister: (
+    email: string,
+    name: string,
+    password: string,
+    profileFile: FileList | undefined
+  ) => void;
   login: (email: string, password: string) => void;
   getUsers: () => void;
   getUser: (_id: string) => void;
@@ -50,6 +57,8 @@ interface UserStore {
     [x: string]: any;
   } | null;
   setToDelete: (toDelete: { [x: string]: any }) => void;
+  followUser: (_id: string) => void;
+  unFollowUser: (_id: string) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -74,6 +83,53 @@ export const useUserStore = create<UserStore>((set) => ({
   users: [],
   setUsers: (users) => set({ users }),
   errorMessage: "",
+  userRegister: async (email, name, password, profileFile) => {
+    const loadingToast = toast.loading("Registering...");
+    let profilePicture = "";
+
+    console.log(profileFile);
+
+    if (profileFile && profileFile.length > 0) {
+      profilePicture = await uploadImageToCloudinary(profileFile[0]);
+    }
+
+    await Axios.post("/api/users/register", {
+      email,
+      name,
+      password,
+      profilePicture,
+    })
+      .then((response) => {
+        console.log(response.data);
+        if (response.status === 201) {
+          set({ user: response.data });
+          console.log(response.data);
+          toast.success("Registered Successfully", {
+            id: loadingToast,
+            duration: 3000,
+          });
+        } else if (response.status === 200) {
+          toast.error(
+            response.data?.message || "Error Happened While Registering",
+            {
+              id: loadingToast,
+              duration: 3000,
+            }
+          );
+        } else {
+          toast.error("Error Happened While Registering", {
+            id: loadingToast,
+            duration: 3000,
+          });
+        }
+      })
+      .catch((error) => {
+        toast.error(error?.message || "Error Happened While Registering", {
+          id: loadingToast,
+          duration: 3000,
+        });
+      });
+  },
   register: async (email, name, password, profileFile) => {
     const loadingToast = toast.loading("Registering...");
     let profilePicture = "";
@@ -204,22 +260,14 @@ export const useUserStore = create<UserStore>((set) => ({
         });
       });
   },
-  updateUser: async (_id, { name, email, password, profileFile }) => {
+  updateUser: async (_id, { name, email, password }) => {
     set({ isNull: false });
     set({ errorMessage: "" });
     const loadingToast = toast.loading("Updating User...");
 
-    let profilePicture = "";
-
-    console.log(profileFile);
-
-    if (profileFile && profileFile.length > 0) {
-      profilePicture = await uploadImageToCloudinary(profileFile[0]);
-    }
-
     await Axios.put(
       `/api/users/${_id}`,
-      { name, email, password, profilePicture },
+      { name, email, password },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("user")}`,
@@ -298,6 +346,113 @@ export const useUserStore = create<UserStore>((set) => ({
       })
       .catch((error) => {
         toast.error(error?.message || "Error Happened While Deleting User", {
+          id: loadingToast,
+          duration: 3000,
+        });
+      });
+  },
+  followUser: async (_id) => {
+    const loadingToast = toast.loading("Following User...");
+    const decodedToken: any = jwtDecode(localStorage.getItem("user") as string);
+
+    await Axios.post(
+      `/api/users/follow/${_id}`,
+      {
+        currentUserId: decodedToken.id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success("User Followed Successfully", {
+            id: loadingToast,
+            duration: 3000,
+          });
+
+          set((state) => ({
+            users: state.users.map((user) =>
+              user._id === _id
+                ? { ...user, followers: [...user.followers, decodedToken.id] }
+                : user
+            ),
+          }));
+        } else if (response.status === 200) {
+          toast.error(
+            response.data?.message || "Error Happened While Following User",
+            {
+              id: loadingToast,
+              duration: 3000,
+            }
+          );
+        } else {
+          toast.error("Error Happened While Following User", {
+            id: loadingToast,
+            duration: 3000,
+          });
+        }
+      })
+      .catch((error) => {
+        toast.error(error?.message || "Error Happened While Following User", {
+          id: loadingToast,
+          duration: 3000,
+        });
+      });
+  },
+  unFollowUser: async (_id) => {
+    const loadingToast = toast.loading("Unfollowing User...");
+    const decodedToken: any = jwtDecode(localStorage.getItem("user") as string);
+
+    await Axios.post(
+      `/api/users/unfollow/${_id}`,
+      {
+        currentUserId: decodedToken.id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success("User Unfollowed Successfully", {
+            id: loadingToast,
+            duration: 3000,
+          });
+
+          set((state) => ({
+            users: state.users.map((user) =>
+              user._id === _id
+                ? {
+                    ...user,
+                    followers: user.followers.filter(
+                      (follower: string) => follower !== decodedToken.id
+                    ),
+                  }
+                : user
+            ),
+          }));
+        } else if (response.status === 200) {
+          toast.error(
+            response.data?.message || "Error Happened While Unfollowing User",
+            {
+              id: loadingToast,
+              duration: 3000,
+            }
+          );
+        } else {
+          toast.error("Error Happened While Unfollowing User", {
+            id: loadingToast,
+            duration: 3000,
+          });
+        }
+      })
+      .catch((error) => {
+        toast.error(error?.message || "Error Happened While Unfollowing User", {
           id: loadingToast,
           duration: 3000,
         });

@@ -17,6 +17,7 @@ import Update from "../crud/Update";
 import { Skeleton } from "@/components/ui/skeleton";
 import Delete from "../crud/Delete";
 import UserRegister from "../UserRegister";
+import BloggerDetail from "../BloggerDetail";
 
 export default function User() {
   const {
@@ -30,6 +31,7 @@ export default function User() {
     setIsCreateOpen,
     isUpdateOpen,
     setIsUpdateOpen,
+    toView,
     setToView,
     toUpdate,
     setToUpdate,
@@ -49,8 +51,16 @@ export default function User() {
 
   const inputs = [
     { name: "name", viewName: "Name", type: "text" },
-    { name: "profilePicture", viewName: "Profile Picture", type: "file" },
     { name: "email", viewName: "Email", type: "text" },
+    {
+      name: "role",
+      viewName: "Role",
+      type: "select",
+      options: [
+        { name: "Admin", value: "admin" },
+        { name: "Blogger", value: "blogger" },
+      ],
+    },
     { name: "password", viewName: "Password", type: "password" },
   ];
 
@@ -62,6 +72,7 @@ export default function User() {
       })
       .optional(),
     email: z.string().email("Email must be Valid").optional(),
+    role: z.string().optional(),
     password: z
       .string()
       .min(5, "Password must be at least 5 characters long")
@@ -173,20 +184,13 @@ export default function User() {
         title="User"
         open={isUpdateOpen}
         setOpen={setIsUpdateOpen}
-        itemToUpdate={{
-          _id: toUpdate?._id,
-          name: toUpdate?.name,
-          email: toUpdate?.email,
-          profilePicture: toUpdate?.profilePicture,
-        }}
-        fileRefValue="profilePicture"
+        itemToUpdate={toUpdate}
       />
       <>
         {isViewOpen && (
           <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
             <DialogContent className="max-w-[95vw] w-full max-h-[95vh]  flex flex-col rounded-lg overflow-auto">
-              {/* <UserDetail id={toView?._id as string} /> */}
-              user
+              <BloggerDetail id={toView?._id as string} />
             </DialogContent>
           </Dialog>
         )}

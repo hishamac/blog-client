@@ -10,202 +10,59 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { usePostStore } from "@/store/postStore";
 import {
   ArrowRightIcon,
-  EyeIcon,
   FilePenIcon,
-  MenuIcon,
-  MountainIcon,
   UsersIcon
 } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Header from "./Header";
 
 export default function Home() {
+  const { posts, getPosts } = usePostStore();
+
+  useEffect(() => {
+    if (posts.length === 0) {
+      getPosts();
+    }
+  }, []);
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <header className="bg-background border-b sticky top-0 z-20 w-full">
-        <div className="container mx-auto px-4 flex justify-between items-center h-16">
-          <Link to="#" className="flex items-center gap-2">
-            <MountainIcon className="h-6 w-6" />
-            <span className="font-bold text-lg">Blog App</span>
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              to="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Home
-            </Link>
-            <Link
-              to="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Categories
-            </Link>
-            <Link
-              to="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              About
-            </Link>
-            <Link
-              to="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Contact
-            </Link>
-            <Link
-              to="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Sign In
-            </Link>
-            <div className="flex items-center gap-4 absolute">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
-                    <MenuIcon className="h-5 w-5" />
-                    <span className="sr-only">Toggle menu</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right">
-                  <nav className="flex flex-col gap-4">
-                    <Link to="#" className="text-foreground hover:text-primary">
-                      Home
-                    </Link>
-                    <Link to="#" className="text-foreground hover:text-primary">
-                      Categories
-                    </Link>
-                    <Link to="#" className="text-foreground hover:text-primary">
-                      About
-                    </Link>
-                    <Link to="#" className="text-foreground hover:text-primary">
-                      Contact
-                    </Link>
-                    <Link to="#" className="text-foreground hover:text-primary">
-                      Sign In
-                    </Link>
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
-          </nav>
-
-          <div className="md:flex items-center gap-4 hidden">
-            <Link
-              to="/signin"
-              className="text-sm font-medium text-primary hover:underline"
-            >
-              Sign In
-            </Link>
-            <Button asChild variant="outline" size="sm">
-              <Link to="/register">Register</Link>
-            </Button>
-          </div>
-          <div className="flex items-center gap-4 absolute right-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <MenuIcon className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="flex flex-col gap-4">
-                  <Link to="#" className="text-foreground hover:text-primary">
-                    Home
-                  </Link>
-                  <Link to="#" className="text-foreground hover:text-primary">
-                    Categories
-                  </Link>
-                  <Link to="#" className="text-foreground hover:text-primary">
-                    About
-                  </Link>
-                  <Link to="#" className="text-foreground hover:text-primary">
-                    Contact
-                  </Link>
-                  <Link to="#" className="text-foreground hover:text-primary">
-                    Sign In
-                  </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </header>
+      <Header />
       <main className="flex-1">
         <section className="bg-muted py-6 md:py-12">
           <div className="container mx-auto px-4">
             <Carousel className="max-w-[800px] mx-auto relative">
               <CarouselContent>
-                <CarouselItem>
-                  <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                    <img
-                      src="/placeholder.svg"
-                      width={400}
-                      height={300}
-                      alt="Featured Post"
-                      className="rounded-lg object-cover w-full md:w-1/2 aspect-[4/3]"
-                    />
-                    <div className="space-y-2 md:space-y-4 md:w-1/2">
-                      <div className="text-sm text-muted-foreground">
-                        <span className="font-medium">John Doe</span> • 2 days
-                        ago
+                {posts.map((post) => (
+                  <CarouselItem>
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                      <div className="space-y-2 md:space-y-4 md:w-full">
+                        <div className="text-sm text-muted-foreground">
+                          <span className="font-medium">
+                            {post.author.name}
+                          </span>{" "}
+                          • 2 days ago
+                        </div>
+                        <h2 className="text-lg md:text-2xl font-bold">
+                          {post.title}{" "}
+                        </h2>
+                        <p className="text-muted-foreground text-sm md:text-base line-clamp-3 md:line-clamp-none">
+                          {post.description}
+                        </p>
+                        <Link
+                          to={`/posts/${post._id}`}
+                          className="inline-flex items-center gap-2 font-medium text-primary hover:underline"
+                        >
+                          Read More
+                          <ArrowRightIcon className="w-4 h-4" />
+                        </Link>
                       </div>
-                      <h2 className="text-lg md:text-2xl font-bold">
-                        Unlocking the Secrets of Productivity: Tips and Tricks
-                      </h2>
-                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 md:line-clamp-none">
-                        Discover the ultimate guide to boosting your
-                        productivity and achieving more in less time. Unlock the
-                        secrets that will transform your workflow and help you
-                        conquer your goals.
-                      </p>
-                      <Link
-                        to="#"
-                        className="inline-flex items-center gap-2 font-medium text-primary hover:underline"
-                      >
-                        Read More
-                        <ArrowRightIcon className="w-4 h-4" />
-                      </Link>
                     </div>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                    <img
-                      src="/placeholder.svg"
-                      width={400}
-                      height={300}
-                      alt="Featured Post"
-                      className="rounded-lg object-cover w-full md:w-1/2 aspect-[4/3]"
-                    />
-                    <div className="space-y-2 md:space-y-4 md:w-1/2">
-                      <div className="text-sm text-muted-foreground">
-                        <span className="font-medium">Jane Smith</span> • 1 week
-                        ago
-                      </div>
-                      <h2 className="text-lg md:text-2xl font-bold">
-                        The Art of Mindful Living: Cultivating Inner Peace
-                      </h2>
-                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 md:line-clamp-none">
-                        Explore the transformative power of mindfulness and
-                        learn how to incorporate it into your daily life.
-                        Discover the secrets to achieving a more balanced and
-                        fulfilling existence.
-                      </p>
-                      <Link
-                        to="#"
-                        className="inline-flex items-center gap-2 font-medium text-primary hover:underline"
-                      >
-                        Read More
-                        <ArrowRightIcon className="w-4 h-4" />
-                      </Link>
-                    </div>
-                  </div>
-                </CarouselItem>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
               <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 flex justify-between pointer-events-none">
                 <CarouselPrevious className="relative left-0 translate-x-0 pointer-events-auto" />
@@ -219,108 +76,34 @@ export default function Home() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl md:text-2xl font-bold">Latest Posts</h2>
               <Link
-                to="#"
+                to="/posts"
                 className="text-primary hover:underline text-sm md:text-base"
               >
                 View All
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">Jane Doe</span> • 3 days ago
+              {posts.slice(0, 3).map((post) => (
+                <Card>
+                  <div className="p-4">
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">{post.author.name}</span> •
+                      3 days ago
+                    </div>
+                    <h3 className="text-lg font-bold mt-2">{post.title}</h3>
+                    <p className="text-muted-foreground mt-2 text-sm">
+                      {post.description}
+                    </p>
+                    <Link
+                      to={`/posts/${post._id}`}
+                      className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                    >
+                      Read More
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    Mastering the Art of Baking: Delicious Recipes and
-                    Techniques
-                  </h3>
-                  <p className="text-muted-foreground mt-2 text-sm">
-                    Discover the secrets to baking the perfect cakes, cookies,
-                    and pastries. Learn from expert bakers and impress your
-                    friends and family with your newfound skills.
-                  </p>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">John Smith</span> • 1 week ago
-                  </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    Exploring the Wonders of Nature: A Hiking Guide
-                  </h3>
-                  <p className="text-muted-foreground mt-2 text-sm">
-                    Embark on a journey through the great outdoors and discover
-                    the beauty of nature. Learn essential hiking tips, gear
-                    recommendations, and the best trails to explore.
-                  </p>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">Sarah Lee</span> • 2 weeks ago
-                  </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    The Ultimate Guide to Sustainable Living
-                  </h3>
-                  <p className="text-muted-foreground mt-2 text-sm">
-                    Discover practical tips and strategies to live a more
-                    environmentally-friendly lifestyle. From reducing waste to
-                    adopting renewable energy, this guide will help you make a
-                    positive impact.
-                  </p>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -329,113 +112,33 @@ export default function Home() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl md:text-2xl font-bold">Top Posts</h2>
               <Link
-                to="#"
+                to="/posts"
                 className="text-primary hover:underline text-sm md:text-base"
               >
                 View All
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      <span className="font-medium">John Doe</span> • 1 month
-                      ago
+              {posts.slice(4, 7).map((post) => (
+                <Card>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium">{post.author.name}</span>{" "}
+                        • 1 day ago
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <EyeIcon className="w-4 h-4" />
-                      <span>10k</span>
-                    </div>
+                    <h3 className="text-lg font-bold mt-2">{post.title}</h3>
+                    <Link
+                      to={`/posts/${post._id}`}
+                      className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
+                    >
+                      Read More
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    The Future of Artificial Intelligence: Opportunities and
-                    Challenges
-                  </h3>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      <span className="font-medium">Jane Smith</span> • 2 months
-                      ago
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <EyeIcon className="w-4 h-4" />
-                      <span>8k</span>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    The Art of Minimalist Living: Decluttering and Finding Joy
-                  </h3>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src="/placeholder.svg"
-                    width={400}
-                    height={225}
-                    alt="Blog Post"
-                    className="rounded-t-lg object-cover w-full aspect-video"
-                  />
-                </CardContent>
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      <span className="font-medium">Sarah Lee</span> • 3 months
-                      ago
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <EyeIcon className="w-4 h-4" />
-                      <span>6k</span>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-bold mt-2">
-                    The Power of Positive Thinking: Transforming Your Mindset
-                  </h3>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-medium text-primary hover:underline mt-4"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </Card>
+                </Card>
+              ))}
             </div>
           </div>
         </section>

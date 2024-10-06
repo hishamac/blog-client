@@ -80,7 +80,6 @@ export default function Post() {
         { name: "Archived", value: "archived" },
       ],
     },
-    { name: "imageUrl", viewName: "Image", type: "file" },
     { name: "isActive", viewName: "Is Active", type: "checkbox" },
   ];
 
@@ -96,7 +95,6 @@ export default function Post() {
       .min(20, { message: "Content must be at least 20 characters." }),
     type: z.string().min(1, { message: "Type is required" }),
     status: z.string().min(1, { message: "Status is required" }),
-    imageUrl: z.instanceof(FileList, { message: "Image is required" }),
     isActive: z.boolean().optional(),
   });
 
@@ -112,7 +110,6 @@ export default function Post() {
       .min(20, { message: "Content must be at least 20 characters." }),
     type: z.string().min(1, { message: "Type is required" }),
     status: z.string().min(1, { message: "Status is required" }),
-    imageUrl: z.instanceof(FileList).optional(),
     isActive: z.boolean().optional(),
   });
 
@@ -210,7 +207,6 @@ export default function Post() {
         title="Post"
         open={isCreateOpen}
         setOpen={setIsCreateOpen}
-        fileRefValue="imageUrl"
       />
       <Update
         formSchema={updateFormSchema}
@@ -220,7 +216,6 @@ export default function Post() {
         open={isUpdateOpen}
         setOpen={setIsUpdateOpen}
         itemToUpdate={toUpdate}
-        fileRefValue="imageUrl"
       />
       <>
         {isViewOpen && (

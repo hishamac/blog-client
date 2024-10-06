@@ -42,7 +42,6 @@ interface UpdateProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
   itemToUpdate: any;
-  fileRefValue?: string;
 }
 
 export default function Update({
@@ -53,14 +52,12 @@ export default function Update({
   open,
   setOpen,
   itemToUpdate,
-  fileRefValue,
 }: UpdateProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: itemToUpdate,
   });
 
-  const fileRef = form.register(`${fileRefValue as string}`);
 
   useEffect(() => {
     if (itemToUpdate) {
@@ -121,24 +118,6 @@ export default function Update({
                                     <Textarea
                                       placeholder={`Enter ${title} ${input?.viewName}`}
                                       {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          ) : input.type === "file" ? (
-                            <FormField
-                              control={form.control}
-                              name={`${input?.name}`}
-                              render={({  }) => (
-                                <FormItem>
-                                  <FormLabel>{input?.viewName}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      placeholder={`Enter your ${input?.viewName}`}
-                                      type="file"
-                                      {...fileRef}
                                     />
                                   </FormControl>
                                   <FormMessage />
